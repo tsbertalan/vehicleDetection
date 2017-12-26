@@ -142,23 +142,31 @@ class Detector:
 
         #1) Create an empty list to receive positive detection windows
         on_windows = []
+
         #2) Iterate over all windows in the list
         for window in windows:
             window = decidedWindow(window)
 
             #3) Extract the test window from original image
             test_img = cv2.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64, 64))
+
             #4) Extract features for that window using single_img_features()
             features = self.featurize(test_img).reshape((1, -1))
+
             #5) Scale extracted features to be fed to classifier
             test_features = self.scaler.transform(features)
+
             #6) Predict using your classifier
-            window.decisionFunc = self.clf.decision_function(test_features)
-            # from IPython.core.debugger import set_trace; set_trace()
-            prediction = window.decisionFunc > 0
+            if hasattr(self.clf, 'decision_function'):
+                window.decisionFunc = self.clf.decision_function(test_features)
+                prediction = window.decisionFunc > 0
+            else:
+                prediction = self.clf.predict(test_features)
+
             #7) If positive (prediction == 1) then save the window
             if prediction:
                 on_windows.append(window)
+
         #8) Return windows for positive detections
         return on_windows
 
