@@ -38,11 +38,11 @@ class Detector:
             ],
         # High C is prone to overfitting; low, under.
         # Low C makes for a smoother decision surface.
-        C=np.logspace(-3, 1.6, 12),
+        C=np.logspace(-3, 1.6, 16),
         # C=[10**(-.91)],
         # High gamma means influence of neighbors is more local; low, global.
         # Low-gamma behaves more like a a linear SVC; high more complex.
-        gamma=np.logspace(-8, -2, 12),
+        gamma=np.logspace(-8, -2, 16),
         # gamma=[10**(-4.2)],
         ),
         searchParams=dict(n_jobs=7, n_iter=128),
@@ -92,7 +92,7 @@ class Detector:
         self.featurizeKwargs = featurizeKwargs
 
     def featurize(self, image):
-        if (image > 1).any():
+        if image.dtype == np.uint8 or (image > 1).any():
             image = (np.copy(image) / 255.).astype('float32')
         return vehicleDetection.search_classify.single_img_features(
             image, **self.featurizeKwargs
@@ -154,9 +154,11 @@ class Detector:
             test_features = self.scaler.transform(features)
             #6) Predict using your classifier
             window.decisionFunc = self.clf.decision_function(test_features)
-            # #7) If positive (prediction == 1) then save the window
-            # if prediction:
-            on_windows.append(window)
+            # from IPython.core.debugger import set_trace; set_trace()
+            prediction = window.decisionFunc > 0
+            #7) If positive (prediction == 1) then save the window
+            if prediction:
+                on_windows.append(window)
         #8) Return windows for positive detections
         return on_windows
 
