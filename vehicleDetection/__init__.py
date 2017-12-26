@@ -5,6 +5,8 @@ import pickle
 import cv2
 from scipy.ndimage.measurements import label
 
+import vehicleDetection.patches
+
 
 def add_heat(heatmap, bbox_list):
     # Iterate through list of bboxes
