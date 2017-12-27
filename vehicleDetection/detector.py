@@ -13,7 +13,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 from scipy.ndimage.measurements import label
 
-import vehicleDetection, vehicleDetection.search_classify
+import vehicleDetection
 
 def cached(method):
     def cachedMethod(self, *args, **kwargs):
@@ -94,7 +94,7 @@ class Detector:
     def featurize(self, image):
         if image.dtype == np.uint8 or (image > 1).any():
             image = (np.copy(image) / 255.).astype('float32')
-        return vehicleDetection.search_classify.single_img_features(
+        return vehicleDetection.features.single_img_features(
             image, **self.featurizeKwargs
         )
 
@@ -196,7 +196,7 @@ class Detector:
             )
             kw.update(self.slide_window_kwargs)
             windows.extend(
-                vehicleDetection.search_classify.slide_window(
+                vehicleDetection.search.slide_window(
                     image,
                     **kw
                 )
