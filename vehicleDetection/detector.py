@@ -13,7 +13,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 from scipy.ndimage.measurements import label
 
-import vehicleDetection, vehicleDetection.search_classify, vehicleDetection.lesson_functions
+import vehicleDetection, vehicleDetection.search_classify
 
 def cached(method):
     def cachedMethod(self, *args, **kwargs):
@@ -174,7 +174,7 @@ class Detector:
         bboxes = self.rawDetect(image)
         if ax is None: fig, ax = plt.subplots(figsize=(16,9))
         ax.imshow(
-            vehicleDetection.lesson_functions.draw_boxes(
+            vehicleDetection.drawing.draw_boxes(
                 image, bboxes,
                 # thick=1 will exclude some horizontals sometimes.
                 thick=2,
@@ -196,7 +196,7 @@ class Detector:
             )
             kw.update(self.slide_window_kwargs)
             windows.extend(
-                vehicleDetection.lesson_functions.slide_window(
+                vehicleDetection.search_classify.slide_window(
                     image,
                     **kw
                 )
@@ -205,7 +205,8 @@ class Detector:
 
     def heat(self, imageShape, bboxes):
         heatmap = np.zeros(imageShape)
-        heatmap = vehicleDetection.add_heat(heatmap, bboxes)
+        for box in bboxes:
+            heatmap[box[0][1]:box[1][1], box[0][0]:box[1][0]] += 1
         return heatmap
 
     def detect(self, image, retHeatmap=False, threshold=1):
@@ -222,7 +223,7 @@ class Detector:
 
     def drawHeat(self, image, ax=None, cleanax=True, threshold=1):
         labels, heatmap = self.detect(image, retHeatmap=True, threshold=threshold)
-        draw_img = vehicleDetection.draw_labeled_bboxes(
+        draw_img = vehicleDetection.drawing.draw_labeled_bboxes(
             image, labels
         )
         if ax is None: fig, ax = plt.subplots(figsize=(16,9))
