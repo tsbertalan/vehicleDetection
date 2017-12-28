@@ -97,13 +97,8 @@ class Detector:
         self.scales = scales
         self.slide_window_kwargs = {}
         self.slide_window_kwargs.update(slide_window_kwargs)
-        self.featurizeKwargs = featurizeKwargs
-
-    def featurize(self, image):
-        if image.dtype == np.uint8 or (image > 1).any():
-            image = (np.copy(image) / 255.).astype('float32')
-        return vehicleDetection.features.single_img_features(
-            image, **self.featurizeKwargs
+        self.featurize = vehicleDetection.features.FeatureExtractor(
+            **featurizeKwargs
         )
 
     def fit(self, imageWindows, classes):
