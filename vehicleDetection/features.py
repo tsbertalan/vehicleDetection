@@ -51,6 +51,36 @@ def color_hist(img, nbins=32):    #bins_range=(0, 256)
     return hist_features
 
 
+def multichannelHog(
+    feature_image, 
+    hog_channel,
+    orient,
+    pix_per_cell,
+    cell_per_block,
+    vis=False,
+    ):
+    if hog_channel == 'ALL':
+        hog_features = []
+        hogVis = []
+        for channel in range(feature_image.shape[2]):
+            hog_featuresChannel, hogVisChannel = get_hog_features(
+                feature_image[:, :, channel], 
+                orient, pix_per_cell, cell_per_block, 
+                vis=vis, feature_vec=True
+            )
+            hog_features.append(hog_featuresChannel)
+            hogVis.append(hogVisChannel)
+        hog_features = np.ravel(hog_features)
+        hogVis = np.dstack(hogVis)
+    else:
+        hog_features, hogVis = get_hog_features(
+            feature_image[:, :, hog_channel], 
+            orient, pix_per_cell, cell_per_block,
+            vis=vis, feature_vec=True
+        )
+    return hog_features, hogVis
+
+
 class FeatureExtractor:
 
     def __init__(self, 
@@ -133,33 +163,24 @@ class FeatureExtractor:
             hist_features = color_hist(feature_image, nbins=self.hist_bins)
             features.append(hist_features)
 
-        hogVis = None
         if self.hog_feat:
-            if self.hog_channel == 'ALL':
-                hog_features = []
-                hogVis = []
-                for channel in range(feature_image.shape[2]):
-                    hog_featuresChannel, hogVisChannel = get_hog_features(
-                        feature_image[:,:,channel], 
-                        self.orient, self.pix_per_cell, self.cell_per_block, 
-                        vis=vis, feature_vec=True
-                    )
-                    hog_features.append(hog_featuresChannel)
-                    hogVis.append(hogVisChannel)
-                hog_features = np.ravel(hog_features)
-                hogVis = np.dstack(hogVis)
-            else:
-                hog_features, hogVis = get_hog_features(
-                    feature_image[:,:,self.hog_channel], 
-                    self.orient, self.pix_per_cell, self.cell_per_block,
-                    vis=vis, feature_vec=True
-                )
+            hog_features, hogVis = self._hog(
+                feature_image,
+                vis=vis,
+            )
             features.append(hog_features)
 
         return np.concatenate(features), hogVis
 
-    # def _hogFeatures(self, image):
-
+    def _hog(self, feature_image, vis=False):
+        return multichannelHog(
+            feature_image,
+            self.hog_channel,
+            self.orient,
+            self.pix_per_cell,
+            self.cell_per_block,
+            vis=vis,
+        )
 
     def visualize(self, image):
         import matplotlib.pyplot as plt
@@ -221,7 +242,7 @@ class FeatureExtractor:
 
         # Show the HOG features.
         row = generateRow(len(channelIndices)+1)
-        hogVis = self._extract_features(image, vis=True)[1]
+        hogVis = self._hog(feature_image, vis=True)[1]
         row[0].imshow(hogVis)
         row[0].set_title('HOG')
         channels = breakChannels(hogVis)
