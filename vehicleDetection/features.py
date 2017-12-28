@@ -13,7 +13,8 @@ def convert_color(img, conv='RGB2YCrCb'):
 
 def get_hog_features(
     img, orient, pix_per_cell, cell_per_block, 
-    vis=False, feature_vec=True):
+    vis=False, feature_vec=True
+    ):
     # Call with two outputs if vis==True
     if vis == True:
         features, hog_image = hog(img, orientations=orient, 
@@ -109,9 +110,9 @@ def extract_features(
 # This function is very similar to extract_features()
 # just for a single image rather than list of images
 def single_img_features(
-    img, color_space='RGB', spatial_size=(32, 32),
+    img, color_space='HLS', spatial_size=(32, 32),
     hist_bins=32, orient=9, 
-    pix_per_cell=8, cell_per_block=2, hog_channel=0,
+    pix_per_cell=8, cell_per_block=2, hog_channel='ALL',
     spatial_feat=True, hist_feat=True, hog_feat=True):    
     #1) Define an empty list to receive features
     img_features = []

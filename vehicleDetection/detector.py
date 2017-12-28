@@ -31,22 +31,35 @@ def cached(method):
 
 class Detector:
 
-    def __init__(self, slide_window_kwargs={}, CLF=SVC, clfParameters=dict(
-        kernel=[
-            # 'linear',
-            'rbf',
-            ],
-        # High C is prone to overfitting; low, under.
-        # Low C makes for a smoother decision surface.
-        C=np.logspace(-3, 1.6, 16),
-        # C=[10**(-.91)],
-        # High gamma means influence of neighbors is more local; low, global.
-        # Low-gamma behaves more like a a linear SVC; high more complex.
-        gamma=np.logspace(-8, -2, 16),
-        # gamma=[10**(-4.2)],
+    def __init__(self, 
+        slide_window_kwargs={}, 
+        CLF=SVC, 
+        clfParameters=dict(
+            kernel=[
+                # 'linear',
+                'rbf',
+                ],
+            # High C is prone to overfitting; low, under.
+            # Low C makes for a smoother decision surface.
+            # C=15.199110829529332,
+            C=2.23872,
+            # C=[10**(-.91)],
+            # High gamma means influence of neighbors is more local; low, global.
+            # Low-gamma behaves more like a a linear SVC; high more complex.
+            # gamma=6.5793322465756827e-05,
+            gamma=6.30957e-5,
         ),
-        searchParams=dict(n_jobs=7, n_iter=128),
-        featurizeKwargs=dict(color_space='HSV'),
+        searchParams=dict(n_jobs=7, n_iter=512),
+        #featurizeKwargs=dict(color_space='HSV'),
+        featurizeKwargs={},
+        scales = [
+        #  scale, (lo,  hi), overlap
+           #(256, (720, 400), .5),
+            (128, (690, 400), .5),
+            (96,  (600, 400), .5),
+            (64,  (600, 400), .5),
+            (48,  (550, 400), .5),
+        ]
         ):
         self.scaler = StandardScaler()
         if clfParameters is None:
@@ -80,13 +93,8 @@ class Detector:
                     searchParams.pop('n_iter', None)
                     Search = GridSearchCV
                 self.clf = Search(CLF(), clfParameters, **searchParams)
-        self.scales = [
-        #  scale, (lo,  hi), overlap
-            (256, (720, 400), .9),
-            (128, (600, 300), .75),
-            (96,  (500, 300), .5),
-            (64,  (500, 300), .25),
-        ]
+
+        self.scales = scales
         self.slide_window_kwargs = {}
         self.slide_window_kwargs.update(slide_window_kwargs)
         self.featurizeKwargs = featurizeKwargs
