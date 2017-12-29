@@ -145,6 +145,10 @@ class FeatureExtractor:
 
     def _extract_features(self, image, vis=False):
 
+        if image.dtype != 'uint8' or (image <= 1).all():
+            print('Image was not converted!')
+            image = (image * 255).astype('uint8')
+
         # Disambiguate uint8 [0, 255] or float [0, 1] images.
         if image.dtype == np.uint8 or (image > 1).any():
             image = (np.copy(image) / 255.).astype('float32')

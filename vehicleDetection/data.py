@@ -7,8 +7,20 @@ subKeys = {
     'non-vehicles': ['GTI'],
 }
 
-def getData():
 
+def readImage(filePath):
+
+    data = mpimage.imread(filePath)
+
+    if filePath.endswith('.png'):
+        assert data.max() <= 1.0
+        assert data.min() >= 0.0
+        data = (data*255).astype('uint8')
+
+    return data
+
+
+def getData():
 
     paths = []
     for mainKey in subKeys.keys():
@@ -27,7 +39,7 @@ def getData():
     ids = [x[0] for x in paths]
 
     images = [
-        mpimage.imread(path)
+        readImage(path)
         for (i, veh, gti, path) in tqdm.tqdm_notebook(paths, unit='path')
     ]
 
