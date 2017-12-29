@@ -107,10 +107,7 @@ class Detector:
             for image in imageWindows
         ])
         scaled = self.scaler.fit_transform(features)
-
         boolLabels = np.array(classes).astype(bool)#.reshape((-1, 1))
-
-        # from IPython.core.debugger import set_trace; set_trace()
 
         rand_state = 4
         X_train, X_test, y_train, y_test = train_test_split(
@@ -122,10 +119,7 @@ class Detector:
         # Check the score of the SVC
         print(
             'Test Accuracy of clf = ', 
-            round(
-                self.clf.score(X_test, y_test),
-                4
-            )
+            self.clf.score(X_test, y_test),
         )
         import sklearn.model_selection._search
         if isinstance(self.clf, sklearn.model_selection._search.BaseSearchCV):

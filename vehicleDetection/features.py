@@ -196,6 +196,7 @@ class FeatureExtractor:
         if self.hist_feat:    nrows += 1
         if self.hog_feat:     nrows += 1
         fig = plt.figure(figsize=(16, 3*nrows))
+        keepTicks = set()
 
         rowIndex = [0]
         axes = []
@@ -215,33 +216,47 @@ class FeatureExtractor:
             return out
 
         # Show the input.
-        row = generateRow(len(channelIndices)+1)
+        row = generateRow(len(channelIndices) + 1)
         row[0].imshow(image)
         row[0].set_title('color image')
         feature_image = self.getChannels(image)
 
+        # Plotting utilities.
         breakChannels = lambda colors: [colors[:, :, i] for i in channelIndices]
+        def multiLinePlot(signal, label):
+            row = generateRow(len(channelIndices))
+            C = self.colorSpaceNames
+            for i in range(len(channelIndices)):
+                ax = row[i]
+                d = len(signal) / len(channelIndices)
+                assert int(d) == d
+                d = int(d)
+                y = signal[d*i:d*(i+1)]
+                ax.plot(y, linewidth=1, color='rgb'[i])
+                ax.set_title('%s: %s' % (label, C[i]))
+            [keepTicks.add(ax) for ax in row]
+            return row
         
         # Show the color channels.
         channels = breakChannels(feature_image)
         for channel, ax, cname in zip(channels, row[1:], self.colorSpaceNames):
-            ax.imshow(channel)
+            if cname == 'H':
+                cmap = 'hsv'
+            else:
+                cmap = 'viridis'
+            ax.imshow(channel, cmap=cmap)
             ax.set_title(cname)
 
         # Show the spatial features.
-        ax = generateRow(1)[0]
         spatial_features = bin_spatial(feature_image, size=self.spatial_size)
-        ax.plot(spatial_features)
-        ax.set_title('spatial features')
+        multiLinePlot(spatial_features, 'image')
 
         # Show the color histogram features.
         hist_features = color_hist(feature_image, nbins=self.hist_bins)
-        ax = generateRow(1)[0]
-        ax.plot(hist_features)
-        ax.set_title('color histogram features')
+        multiLinePlot(hist_features, 'color hist')
 
         # Show the HOG features.
-        row = generateRow(len(channelIndices)+1)
+        row = generateRow(len(channelIndices) + 1)
         hogVis = self._hog(feature_image, vis=True)[1]
         row[0].imshow(hogVis)
         row[0].set_title('HOG')
@@ -254,7 +269,7 @@ class FeatureExtractor:
         for row in axes:
             for ax in row:
                 ax.set_xticks([])
-                ax.set_yticks([])
-        fig.tight_layout()
+                if ax not in keepTicks:
+                    ax.set_yticks([])
 
         return fig, axes
