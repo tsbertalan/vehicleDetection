@@ -272,8 +272,8 @@ class FeatureExtractor:
         # Clean up the axes.
         for row in axes:
             for ax in row:
-                ax.set_xticks([])
                 if ax not in keepTicks:
+                    ax.set_xticks([])
                     ax.set_yticks([])
 
         return fig, axes

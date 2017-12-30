@@ -1,3 +1,5 @@
+import cv2
+import numpy as np
 from glob import glob
 import matplotlib.image as mpimage
 import tqdm
@@ -20,7 +22,17 @@ def readImage(filePath):
     return data
 
 
-def getData():
+def randomLighten(im):
+    hsv = cv2.cvtColor(im, cv2.COLOR_RGB2HSV)
+    factor = np.random.uniform(
+        low=1, 
+        high=255 / hsv[:, :, 2].max()
+    )
+    hsv[:, :, 2] = np.clip(hsv[:, :, 2].astype(float) * factor, 0, 255).astype('uint8')
+    return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+
+
+def getData(numLighter=2048):
 
     paths = []
     for mainKey in subKeys.keys():
@@ -48,5 +60,13 @@ def getData():
         for (i, veh, gti, path)
         in paths
     ]
+
+    if numLighter > 0:
+        
+        indices = np.random.choice(np.arange(len(images)), size=numLighter, replace=False)
+        lighterImages = [randomLighten(images[i]) for i in indices]
+        ligherClasses = [classes[i] for i in indices]
+        images += lighterImages
+        classes += ligherClasses
 
     return images, classes
