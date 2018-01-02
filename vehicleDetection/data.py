@@ -5,7 +5,9 @@ import matplotlib.image as mpimage
 import tqdm
 
 subKeys = {
+    #               1       2               3           4
     'vehicles': ['GTI_Far', 'GTI_Left', 'GTI_Right', 'GTI_MiddleClose'],
+    #                  0
     'non-vehicles': ['GTI'],
 }
 
@@ -31,8 +33,16 @@ def randomLighten(im):
     hsv[:, :, 2] = np.clip(hsv[:, :, 2].astype(float) * factor, 0, 255).astype('uint8')
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
+def flipx(x):
+    return np.fliplr(x)
 
-def getData(numLighter=2048):
+def flipy(y):
+    y = {
+        0: 0, 1: 1, 4: 4,
+        2: 3, 3: 2,
+    }[y]
+
+def getData(numLighter=2048, numFlip=2048):
 
     paths = []
     for mainKey in subKeys.keys():
@@ -62,11 +72,17 @@ def getData(numLighter=2048):
     ]
 
     if numLighter > 0:
-        
         indices = np.random.choice(np.arange(len(images)), size=numLighter, replace=False)
         lighterImages = [randomLighten(images[i]) for i in indices]
         ligherClasses = [classes[i] for i in indices]
         images += lighterImages
         classes += ligherClasses
+
+    if numFlip > 0:
+        indices = np.random.choice(np.arange(len(images)), size=numLighter, replace=False)
+        flippedImages = [flipx(images[i]) for i in indices]
+        flippedClasses = [flipy(classes[i]) for i in indices]
+        images += flippedImages
+        classes += flippedClasses
 
     return images, classes

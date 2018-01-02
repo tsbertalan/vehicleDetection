@@ -51,7 +51,10 @@ class Detector:
         ),
         searchParams=dict(n_jobs=7, n_iter=512),
         #featurizeKwargs=dict(color_space='HSV'),
-        featurizeKwargs={'spatial_feat': False,},
+        featurizeKwargs=dict(
+            spatial_feat=False,
+            hist_feat=True,
+        ),
         scales = [
         #  scale, (lo,  hi), overlap
            #(256, (720, 400), .5),
@@ -133,16 +136,11 @@ class Detector:
         return bboxes
 
     def search_windows(self, img, windows):
-        # Also store the decision function value.
-        class decidedWindow(tuple):
-            decisionFunc = None
-
         #1) Create an empty list to receive positive detection windows
         on_windows = []
 
         #2) Iterate over all windows in the list
         for window in windows:
-            window = decidedWindow(window)
 
             #3) Extract the test window from original image
             test_img = cv2.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64, 64))
@@ -154,11 +152,7 @@ class Detector:
             test_features = self.scaler.transform(features)
 
             #6) Predict using your classifier
-            if hasattr(self.clf, 'decision_function'):
-                window.decisionFunc = self.clf.decision_function(test_features)
-                prediction = window.decisionFunc > 0
-            else:
-                prediction = self.clf.predict(test_features)
+            prediction = self.clf.predict(test_features)
 
             #7) If positive (prediction == 1) then save the window
             if prediction:
