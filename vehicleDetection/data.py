@@ -42,7 +42,7 @@ def flipy(y):
         2: 3, 3: 2,
     }[y]
 
-def getData(numLighter=0, numFlip=0):
+def getData(numLighter=0, numFlip=2048):
 
     paths = []
     for mainKey in subKeys.keys():
