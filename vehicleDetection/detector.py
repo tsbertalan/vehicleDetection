@@ -53,7 +53,7 @@ class Detector:
         #featurizeKwargs=dict(color_space='HSV'),
         featurizeKwargs=dict(
             spatial_feat=False,
-            hist_feat=True,
+            hist_feat=False,
         ),
         scales = [
         #  scale, (lo,  hi), overlap
