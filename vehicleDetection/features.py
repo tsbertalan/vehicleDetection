@@ -252,22 +252,25 @@ class FeatureExtractor:
             ax.set_title(cname)
 
         # Show the spatial features.
-        spatial_features = bin_spatial(feature_image, size=self.spatial_size)
-        multiLinePlot(spatial_features, 'image')
+        if self.spatial_feat:
+            spatial_features = bin_spatial(feature_image, size=self.spatial_size)
+            multiLinePlot(spatial_features, 'image')
 
         # Show the color histogram features.
-        hist_features = color_hist(feature_image, nbins=self.hist_bins)
-        multiLinePlot(hist_features, 'color hist')
+        if self.hist_feat:
+            hist_features = color_hist(feature_image, nbins=self.hist_bins)
+            multiLinePlot(hist_features, 'color hist')
 
         # Show the HOG features.
-        row = generateRow(len(channelIndices) + 1)
-        hogVis = self._hog(feature_image, vis=True)[1]
-        row[0].imshow(hogVis)
-        row[0].set_title('HOG')
-        channels = breakChannels(hogVis)
-        for channel, ax, cname in zip(channels, row[1:], self.colorSpaceNames):
-            ax.imshow(channel)
-            ax.set_title('HOG: %s' % cname)
+        if self.hog_feat:
+            row = generateRow(len(channelIndices) + 1)
+            hogVis = self._hog(feature_image, vis=True)[1]
+            row[0].imshow(hogVis)
+            row[0].set_title('HOG')
+            channels = breakChannels(hogVis)
+            for channel, ax, cname in zip(channels, row[1:], self.colorSpaceNames):
+                ax.imshow(channel)
+                ax.set_title('HOG: %s' % cname)
 
         # Clean up the axes.
         for row in axes:
