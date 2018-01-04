@@ -51,10 +51,7 @@ class Detector:
         ),
         searchParams=dict(n_jobs=7, n_iter=512),
         #featurizeKwargs=dict(color_space='HSV'),
-        featurizeKwargs=dict(
-            spatial_feat=False,
-            hist_feat=False,
-        ),
+        featurizeKwargs={},
         scales = [
         #  scale, (lo,  hi), overlap
            #(256, (720, 400), .5),

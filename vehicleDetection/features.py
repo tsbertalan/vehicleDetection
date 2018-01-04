@@ -87,7 +87,7 @@ class FeatureExtractor:
         color_space='HLS', spatial_size=(32, 32),
         hist_bins=32, orient=9, 
         pix_per_cell=8, cell_per_block=2, hog_channel='ALL',
-        spatial_feat=True, hist_feat=True, hog_feat=True
+        spatial_feat=True, hist_feat=False, hog_feat=True
         ):
         self.color_space = color_space
         self.spatial_size = spatial_size

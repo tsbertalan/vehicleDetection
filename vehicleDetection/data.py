@@ -11,7 +11,6 @@ subKeys = {
     'non-vehicles': ['GTI'],
 }
 
-
 def readImage(filePath):
 
     data = mpimage.imread(filePath)
@@ -22,7 +21,6 @@ def readImage(filePath):
         data = (data*255).astype('uint8')
 
     return data
-
 
 def randomLighten(im):
     hsv = cv2.cvtColor(im, cv2.COLOR_RGB2HSV)
@@ -42,7 +40,7 @@ def flipy(y):
         2: 3, 3: 2,
     }[y]
 
-def getData(numLighter=0, numFlip=0):
+def getData(numLighter=3*1024, numFlip=3*1024):
 
     paths = []
     for mainKey in subKeys.keys():
