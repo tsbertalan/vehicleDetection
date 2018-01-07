@@ -35,19 +35,16 @@ class Detector:
         slide_window_kwargs={}, 
         CLF=SVC, 
         clfParameters=dict(
-            kernel=[
-                # 'linear',
-                'rbf',
-                ],
+            kernel='rbf',
             # High C is prone to overfitting; low, under.
             # Low C makes for a smoother decision surface.
             # C=15.199110829529332,
-            C=2.23872,
+            C=.5,
             # C=[10**(-.91)],
             # High gamma means influence of neighbors is more local; low, global.
             # Low-gamma behaves more like a a linear SVC; high more complex.
             # gamma=6.5793322465756827e-05,
-            gamma=6.30957e-5,
+            gamma=7e-5,
         ),
         searchParams=dict(n_jobs=7, n_iter=512),
         #featurizeKwargs=dict(color_space='HSV'),
@@ -203,7 +200,6 @@ class Detector:
         heatmap[heatmap <= threshold] = 0
         #heatmap = np.clip(heatmap, 0, 255)
         labels = label(heatmap)
-        print('Found %s labels.' % labels[1])
 
         if retHeatmap:
             return labels, heatmap
