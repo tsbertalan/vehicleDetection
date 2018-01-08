@@ -1,6 +1,21 @@
 import numpy as np
+
 from skimage.feature import hog
 import cv2
+
+
+import logging
+# create logger with 'spam_application'
+logger = logging.getLogger('featurize')
+logger.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.WARN)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(ch)
 
 def convert_color(img, conv='RGB2YCrCb'):
     if conv == 'RGB2YCrCb':
@@ -146,7 +161,7 @@ class FeatureExtractor:
     def _extract_features(self, image, vis=False):
 
         if image.dtype != 'uint8' or (image <= 1).all():
-            print('Image was not converted!')
+            logger.warning('Image was not converted to UINT8!')
             image = (image * 255).astype('uint8')
 
         # Disambiguate uint8 [0, 255] or float [0, 1] images.
@@ -173,6 +188,8 @@ class FeatureExtractor:
                 vis=vis,
             )
             features.append(hog_features)
+        else:
+            hogVis = None
 
         return np.concatenate(features), hogVis
 
