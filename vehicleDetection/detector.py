@@ -39,7 +39,7 @@ class Detector:
             # High C is prone to overfitting; low, under.
             # Low C makes for a smoother decision surface.
             # C=15.199110829529332,
-            C=.5,
+            C=.1,
             # C=[10**(-.91)],
             # High gamma means influence of neighbors is more local; low, global.
             # Low-gamma behaves more like a a linear SVC; high more complex.
@@ -111,7 +111,9 @@ class Detector:
         divisions = (np.argwhere(np.diff(boolLabels)) + 1).ravel()
 
         # If we switch classes a lot, just do the simple split.
+        oneClassCheck = True
         if len(divisions) > 10:
+            oneClassCheck = False
             divisions = [int(len(boolLabels)*splitFrac)]
 
         # Regardless, add virtual indices at start and end.
@@ -130,7 +132,8 @@ class Detector:
             # Extract the same-class block.
             feat = scaled[blockStart:blockEnd]
             clas  = boolLabels[blockStart:blockEnd]
-            assert len(set(clas)) == 1
+            if oneClassCheck:
+                assert len(set(clas)) == 1, (set(clas), blockStart, blockEnd)
             
             # Put some of the block in train and some in test.
             split = int(len(feat) * splitFrac)
