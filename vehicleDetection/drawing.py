@@ -14,9 +14,8 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     return imcopy
 
 
-def draw_labeled_bboxes(img, labels):
-    # Iterate through all detected cars
-    img = np.copy(img)
+def labeledBboxes(labels):
+    bboxes = []
     for car_number in range(1, labels[1]+1):
         # Find pixels with each car_number label value
         nonzero = (labels[0] == car_number).nonzero()
@@ -25,8 +24,51 @@ def draw_labeled_bboxes(img, labels):
         nonzerox = np.array(nonzero[1])
         # Define a bounding box based on min/max x and y
         bbox = ((np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy)))
-        # Draw the box on the image
-        cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
-    # Return the image
+
+        bboxes.append(bbox)
+
+    return bboxes
+
+
+def drawBboxes(img, bboxes, color=(0, 0, 255)):
+    img = np.copy(img)
+    for bbox in bboxes:
+        cv2.rectangle(img, bbox[0], bbox[1], color, 6)
     return img
 
+
+def draw_labeled_bboxes(img, labels, **kw):
+    bboxes = labeledBboxes(labels)
+    return drawBboxes(img, bboxes, **kw)
+
+
+def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=50, cpix=10, copy=True, **kwargs):
+    if copy:
+        img = np.copy(img)
+
+    nrows, ncols = img.shape[:2]
+    for k, v in dict(
+        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        fontScale=3,
+        thickness=2,
+        color=(255, 255, 0),
+        lineType=cv2.LINE_AA,
+        ).items():
+        kwargs.setdefault(k, v)
+
+    wrapcols = int(ncols / pixelsPerColumn)
+
+    # Wrap lines.
+    import textwrap
+    textlines = textwrap.wrap(text, width=wrapcols)
+
+    for line in textlines: 
+        cv2.putText(
+                img, 
+                line,
+                (cpix, rpix),
+                **kwargs
+            )
+        rpix += roffset
+
+    return img

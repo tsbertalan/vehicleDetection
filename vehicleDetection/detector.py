@@ -244,33 +244,3 @@ class Detector:
             )
         return windows
 
-    def heat(self, imageShape, bboxes):
-        heatmap = np.zeros(imageShape)
-        for box in bboxes:
-            heatmap[box[0][1]:box[1][1], box[0][0]:box[1][0]] += 1
-        return heatmap
-
-    def detect(self, image, retDict=False, threshold=1):
-        bboxes = self.rawDetect(image)
-        heatmap = self.heat(image.shape, bboxes)
-        heatmap[heatmap <= threshold] = 0
-        #heatmap = np.clip(heatmap, 0, 255)
-        labels = label(heatmap)
-
-        if retDict:
-            return dict(labels=labels, heatmap=heatmap, bboxes=bboxes)
-        return labels
-
-    def drawHeat(self, image, ax=None, cleanax=True, threshold=1):
-        out = self.detect(image, retDict=True, threshold=threshold)
-        labels = out['labels']
-        heatmap = out['heatmap']
-        draw_img = vehicleDetection.drawing.draw_labeled_bboxes(
-            image, labels
-        )
-        if ax is None: fig, ax = plt.subplots(figsize=(16,9))
-        ax.imshow(draw_img)
-        if cleanax:
-            ax.set_xticks([])
-            ax.set_yticks([]);
-        return ax
