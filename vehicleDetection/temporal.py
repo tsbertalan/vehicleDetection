@@ -29,7 +29,7 @@ class HeatVideo:
         self.baseLabel = os.path.basename(fpath).replace('.mp4', '')
         self.inputFrames = loadVideo(fpath=self.fpath, **loadKwargs)
         self.thr = thr
-        self.heatDecayKwargs = {}
+        self.coolingKwargs = {}
 
     def go(self, detector):
 
@@ -69,7 +69,7 @@ class HeatVideo:
 
         framesToConcatenate = [
             # self.inputFrames, 
-            self.heatDecay(**self.heatDecayKwargs),
+            self.cooling(**self.coolingKwargs),
             [
                 vehicleDetection.drawing.draw_labeled_bboxes(
                     boxFrame, labels
@@ -92,16 +92,31 @@ class HeatVideo:
             outVidPath
         )
 
-    def heatDecay(self, decayRate=.5, heatRate=1, dt=1):
-        """Model exponential decay with source injections."""
-        def decay(u0, heat):
+    def cooling(self, heatTransferCoefficient=9, heatCapacity=10, dt=1):
+        """Model exponential heat decay with source injections.
+
+        Model heat decay at each pixel using
+            dudt = (heatTransferCoefficient * A * (0 - u(t)) + h(t)) / heatCapacity
+        where A is assumed to be 1 m**2
+
+        Parameters
+        ----------
+        heatTransferCoefficient : float
+            Rate at which heat leaks from each pixel; units are W/m**2/K
+        heatCapacity : float
+            How much thermal inertia the pixels have relative to
+            heating from detections; units are J/K
+        dt : float
+            Duration of each step in the simulation; units are s, but not actual video s.
+        """
+        def decay(u0, power):
             """Euler time stepper/flow map"""
-            dudt = - decayRate * u0 + heatRate * heat
+            dudt = (power - heatTransferCoefficient * u0) / heatCapacity
             return u0 + dudt * dt
 
         # Integrate the ODEs.
-        u = [np.copy(self.heatSources[0])]
-        for heat in self.heatSources[1:]:
+        u = [np.zeros_like(self.heatSources[0])]
+        for heat in self.heatSources:
             u.append(decay(u[-1], heat))
 
         u = np.stack(u)
