@@ -21,7 +21,7 @@ def bboxes2power(imageShape, bboxes):
         power[box[0][1]:box[1][1], box[0][0]:box[1][0]] += 1
     return power
 
-def cooling(heatSources, heatTransferCoefficient=9, heatCapacity=10, dt=1, firstTemps=None):
+def cooling(heatSources, heatTransferCoefficient=1, heatCapacity=6, dt=1, powerFactor=10, coolingRate=64, firstTemps=None):
     """Model exponential heat decay with source injections.
 
     Model heat decay at each pixel using
@@ -35,10 +35,13 @@ def cooling(heatSources, heatTransferCoefficient=9, heatCapacity=10, dt=1, first
     heatTransferCoefficient : float
         Rate at which heat leaks from each pixel; units are W/m**2/K
     heatCapacity : float
-        How much thermal inertia the pixels have relative to
-        heating from detections; units are J/K
+        How much thermal inertia the pixels have; units are J/K
     dt : float
         Duration of each step in the simulation; units are s, but not actual video s.
+    powerFactor : float
+        How much power each detection has; units W/detection.
+    coolingRate : float
+        Static cooling; units W.
     firstTemps : ndarray
         Initial condition for temperature field, units are K.
         Defaults to zeros of same shape as first heatSources array.
@@ -50,7 +53,7 @@ def cooling(heatSources, heatTransferCoefficient=9, heatCapacity=10, dt=1, first
     """
     def decay(u0, power):
         """Euler time stepper/flow map"""
-        dudt = (power - heatTransferCoefficient * u0) / heatCapacity
+        dudt = (power * powerFactor - heatTransferCoefficient * u0 - coolingRate) / heatCapacity
         return u0 + dudt * dt
 
     # Integrate the ODEs.
@@ -59,11 +62,9 @@ def cooling(heatSources, heatTransferCoefficient=9, heatCapacity=10, dt=1, first
     u = [firstTemps]
     for heat in heatSources:
         u.append(decay(u[-1], heat))
+        u[-1][u[-1] < 0] = 0
 
     u = np.stack(u)
-    u /= u.max()
-    u *= 255
-    u = u.astype('uint8')
     return u
 
 
@@ -91,7 +92,7 @@ class HeatVideo:
             rawBboxes = detector.rawDetect(frame)
 
             # Sum raw bounding boxes to get heating power per pixel.
-            heatingPower = bboxes2power(frame.shape, rawBboxes)
+            heatingPower = bboxes2power(frame.shape[:2], rawBboxes)
             assert (heatingPower >= 0).all()
             assert heatingPower.dtype == float
             # heatingPower /= heatingPower.max()
@@ -107,13 +108,17 @@ class HeatVideo:
             self.heatSources.append(power)
             self.rawBboxes.append(rawBboxes)
 
-        self.persist()
-
-    def persist(self):
+    def persist(self, Tthresh=8):
         # Post-process the heat sources to get persistent bounding boxes.self.labels = []
         self.temperatures = cooling(self.heatSources, **self.coolingKwargs)[1:]
+
+        def getBboxes(T):
+            T = np.copy(T)
+            T[T < Tthresh] = 0
+            return vehicleDetection.drawing.labeledBboxes(label(T))
+
         self.persistentBboxes = [
-            vehicleDetection.drawing.labeledBboxes(label(temperature))
+            getBboxes(temperature)
             for temperature in tqdm.tqdm_notebook(
                 self.temperatures,
                 desc='persist bboxes', unit='frame'
@@ -153,19 +158,33 @@ class HeatVideo:
         ]
 
         from vehicleDetection.drawing import writeText as wt
-        return saveVideo(
-            (
-                np.vstack([
-                    np.hstack([wt(rawBox, 'raw'), wt(power, 'power')]),
-                    np.hstack([wt(temperature, 'temp'), wt(persistentBbox, 'persit')]),
+        import cv2
+        def f(weights, label, frame, alpha=.8, hot=True):
+            cmap = cv2.applyColorMap(
+                weights, 
+                cv2.COLORMAP_HOT if hot else cv2.COLORMAP_OCEAN
+            )
+            cmap = cv2.cvtColor(cmap, cv2.COLOR_BGR2RGB)
+            return wt(cv2.addWeighted(cmap, alpha, frame, .8, 0), label)
+
+        def genVidFrames():
+            for frame, segments in zip(self.inputFrames, zip(*framesToConcatenate)):
+                rawBox, power, temperature, persistentBbox = segments
+                tstr = 'temp (Tmax=%.2g)' % temperature.max()
+                vf = np.vstack([
+                    np.hstack([
+                        wt(rawBox, 'raw detections'), 
+                        f(power, 'heating power', frame, hot=False)
+                        ]),
+                    np.hstack([
+                        f(temperature, tstr, frame), 
+                        wt(persistentBbox, 'persistent thresholded components')
+                    ]),
                 ])
-                for (
-                    rawBox, 
-                    power,
-                    temperature,
-                    persistentBbox
-                    )
-                in zip(*framesToConcatenate)
-            ),
+                self.vidFrame = vf
+                yield vf
+
+        return saveVideo(
+            genVidFrames(),
             outVidPath
         )

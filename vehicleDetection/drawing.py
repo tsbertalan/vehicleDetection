@@ -42,7 +42,7 @@ def draw_labeled_bboxes(img, labels, **kw):
     return drawBboxes(img, bboxes, **kw)
 
 
-def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=50, cpix=10, copy=True, **kwargs):
+def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=80, cpix=10, copy=True, **kwargs):
     if copy:
         img = np.copy(img)
 
@@ -53,10 +53,11 @@ def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=50, cpix=10, copy=
         thickness=2,
         color=(255, 255, 0),
         lineType=cv2.LINE_AA,
-        ).items():
+        ).items(): 
         kwargs.setdefault(k, v)
 
-    wrapcols = int(ncols / pixelsPerColumn)
+    pixScale = (kwargs['fontScale'] / .75)
+    wrapcols = int(ncols / pixelsPerColumn / pixScale)
 
     # Wrap lines.
     import textwrap
@@ -69,6 +70,6 @@ def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=50, cpix=10, copy=
                 (cpix, rpix),
                 **kwargs
             )
-        rpix += roffset
+        rpix += int(roffset * pixScale)
 
     return img
