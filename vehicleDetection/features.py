@@ -39,7 +39,7 @@ def get_hog_features(
                                   visualise=vis, feature_vector=feature_vec)
         return features, hog_image
     # Otherwise call with one output
-    else:      
+    else:
         features = hog(img, orientations=orient,
                        pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block),
@@ -94,6 +94,17 @@ def multichannelHog(
             vis=vis, feature_vec=True
         )
     return hog_features, hogVis
+
+
+def hogStrided(
+    feature_image,
+    hog_channel,
+    orient,
+    pix_per_cell,
+    cell_per_block,
+    windows
+    ):
+        feature_array = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), cells_per_block=(cell_per_block, cell_per_block), visualise=False, feature_vector=False)
 
 
 class FeatureExtractor:
