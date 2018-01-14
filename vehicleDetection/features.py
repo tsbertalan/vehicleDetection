@@ -26,28 +26,6 @@ def convert_color(img, conv='RGB2YCrCb'):
         return cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
 
 
-def get_hog_features(
-    img, orient, pix_per_cell, cell_per_block, 
-    vis=False, feature_vec=True
-    ):
-    # Call with two outputs if vis==True
-    if vis == True:
-        features, hog_image = hog(img, orientations=orient, 
-                                  pixels_per_cell=(pix_per_cell, pix_per_cell),
-                                  cells_per_block=(cell_per_block, cell_per_block), 
-                                  transform_sqrt=False, 
-                                  visualise=vis, feature_vector=feature_vec)
-        return features, hog_image
-    # Otherwise call with one output
-    else:
-        features = hog(img, orientations=orient,
-                       pixels_per_cell=(pix_per_cell, pix_per_cell),
-                       cells_per_block=(cell_per_block, cell_per_block),
-                       transform_sqrt=False,
-                       visualise=vis, feature_vector=feature_vec)
-        return features, None
-
-
 def bin_spatial(img, size=(32, 32)):
     color1 = cv2.resize(img[:,:,0], size).ravel()
     color2 = cv2.resize(img[:,:,1], size).ravel()
@@ -66,45 +44,122 @@ def color_hist(img, nbins=32):    #bins_range=(0, 256)
     return hist_features
 
 
-def multichannelHog(
-    feature_image, 
-    hog_channel,
-    orient,
-    pix_per_cell,
-    cell_per_block,
-    vis=False,
+d = 64
+
+
+def ar(f):
+    fr = round(f)
+    assert f == fr
+    return int(fr)
+
+
+def breakIntoWindows(
+    feature_channel,
+    scales = None,
+    orient = 9,
+    pixels_per_cell = 8,
+    cells_per_block = 2,
+    visualize=False,
     ):
-    if hog_channel == 'ALL':
-        hog_features = []
-        hogVis = []
-        for channel in range(feature_image.shape[2]):
-            hog_featuresChannel, hogVisChannel = get_hog_features(
-                feature_image[:, :, channel], 
-                orient, pix_per_cell, cell_per_block, 
-                vis=vis, feature_vec=True
-            )
-            hog_features.append(hog_featuresChannel)
-            hogVis.append(hogVisChannel)
-        hog_features = np.ravel(hog_features)
-        hogVis = np.dstack(hogVis)
-    else:
-        hog_features, hogVis = get_hog_features(
-            feature_image[:, :, hog_channel], 
-            orient, pix_per_cell, cell_per_block,
-            vis=vis, feature_vec=True
+    if scales is None:
+        scales = [
+        #  scale,    (lo,  hi),  overlap
+           #(256/64, (720, 400), .5),
+            (d/128, (690, 400), .5),
+            (d/96,  (600, 400), .4),
+            (d/64,  (600, 400), .3),
+            (d/48,  (550, 400), .25),
+        ]
+    
+    fl = np.math.floor
+    
+    # Accumulate output.
+    blockWindows = []
+    windowLocations = []
+    sliceWindows = []
+    hogVisualizations = []
+    
+    for islice in range(len(scales)):
+        
+        # Extract the image slice and goal window geometry.
+        scale, (lo, hi), overlapFraction = scales[islice]
+
+        # Resize the image slice so that the windows will be d-by-d.
+        assert lo > hi
+        unscaledSlice = feature_channel[hi:lo, :]
+        sliceShape = tuple([int(s*scale) for s in unscaledSlice.shape[:2]])
+        imgSlice = cv2.resize(unscaledSlice, sliceShape[::-1])
+        
+        # What is the geometry of a window and stride in the unscaled image?
+        overlapPix = min(fl(d * overlapFraction), d - 1)
+        stridePix = d - overlapPix
+            
+        # Extract HOG features for the scaled slice.
+        res = hog(
+            imgSlice[:, :],
+            orientations=orient,
+            pixels_per_cell=(pixels_per_cell, pixels_per_cell), 
+            cells_per_block=(cells_per_block, cells_per_block),
+            visualise=visualize, feature_vector=False,
+            block_norm='L2-Hys',
         )
-    return hog_features, hogVis
+        feature_array, hog_image = res if visualize else (res, None)
 
-
-def hogStrided(
-    feature_image,
-    hog_channel,
-    orient,
-    pix_per_cell,
-    cell_per_block,
-    windows
-    ):
-        feature_array = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), cells_per_block=(cell_per_block, cell_per_block), visualise=False, feature_vector=False)
+        # How do we convert from cell-&-block indexing to unscaled-pixel indexing?
+        cellsPerWindow = ar(d / pixels_per_cell)
+        
+        # How does sklearn do the HOG block striding?
+        overlappingBlocksPerWindow = cellsPerWindow - 1
+        cellsPerBlockStride = 1
+        
+        # How many blocks should *we* step by so our windows overlap
+        # by approximately the desired fraction?
+        strideBlocks = round(stridePix / pixels_per_cell / cellsPerBlockStride)
+        
+        # Stride.
+        dr = dc = overlappingBlocksPerWindow
+        rs = cs = strideBlocks
+        rpix = 0
+        rl = 0
+        nr, nc = feature_array.shape[:2]
+        while True:
+            cl = 0
+            cpix = 0
+            while True:
+                
+                # Extract the HOG window.
+                blockWindow = feature_array[rl:(rl+dr), cl:(cl+dc), ...]
+                blockWindows.append(blockWindow)
+                
+                # Extract the image window.
+                wl = np.floor(np.array((
+                    (cpix / scale, hi + rpix / scale), ((cpix + d) / scale, hi + (rpix + d) / scale)
+                ))).astype(int)
+                windowLocations.append(tuple([tuple(p) for p in wl]))
+                sliceWindows.append(
+                    imgSlice[rpix:rpix+d, cpix:cpix+d]
+                )
+                
+                # Extract the HOG visualization window.
+                if visualize:
+                    hogVisualizations.append(
+                        hog_image[rpix:rpix+d, cpix:cpix+d]
+                    )
+                    
+                # Increment the indices.
+                if cl + cs >= nc or cl + cs + dc > nc:
+                    break
+                else:
+                    cl += cs
+                    cpix += stridePix
+                    
+            if rl + rs >= nr or rl + rs + dr > nr:
+                break
+            else:
+                rl += rs
+                rpix += stridePix
+            
+    return blockWindows, sliceWindows, windowLocations, hogVisualizations
 
 
 class FeatureExtractor:
@@ -112,33 +167,19 @@ class FeatureExtractor:
     def __init__(self, 
         color_space='HLS', spatial_size=(32, 32),
         hist_bins=32, orient=9, 
-        pix_per_cell=8, cell_per_block=2, hog_channel='ALL',
+        pixels_per_cell=8, cells_per_block=2, hog_channel='ALL',
         spatial_feat=True, hist_feat=False, hog_feat=True
         ):
         self.color_space = color_space
         self.spatial_size = spatial_size
         self.hist_bins = hist_bins
         self.orient = orient
-        self.pix_per_cell = pix_per_cell
-        self.cell_per_block = cell_per_block
+        self.pixels_per_cell = pixels_per_cell
+        self.cells_per_block = cells_per_block
         self.hog_channel = hog_channel
         self.spatial_feat = spatial_feat
         self.hist_feat = hist_feat
         self.hog_feat = hog_feat
-
-    def __call__(self, imgOrImgs):
-        """Extract features from a list of images.
-        Have this function call bin_spatial() and color_hist()
-        """
-        if isinstance(imgOrImgs, list):
-            return [
-                self(img) for img in imgOrImgs
-            ]
-        else:
-            return self._extract_features(imgOrImgs)[0]
-
-    def hogVis(self, image):
-        return self._extract_features(image, True)[1]
 
     @property
     def colorSpaceNames(self):
@@ -169,7 +210,10 @@ class FeatureExtractor:
             feature_image = np.copy(image)
         return feature_image
 
-    def _extract_features(self, image, vis=False):
+    def __call__(self, image, window=True, giveWindows=None):
+
+        if window:
+            assert image.shape[:2] == (64, 64)
 
         if image.dtype != 'uint8' or (image <= 1).all():
             logger.warning('Image was not converted to UINT8!')
@@ -182,6 +226,42 @@ class FeatureExtractor:
         # Get color channels.
         feature_image = self.getChannels(image)
 
+        # Get windows and hog features.
+        allHogWindows, allColorWindows, allWindowLocations = self.windowFeatures(
+            feature_image, scales=None if not window else [(1, (64, 0), 0)]
+        )
+
+        features = [
+            self._extract_features(color, hog)
+            for (hog, color) in zip(allHogWindows, allColorWindows)
+        ]
+        giveWindows = not window
+        if giveWindows:
+            return np.stack(features), allWindowLocations
+        else:
+            return features[0]
+
+    def windowFeatures(self, feature_image, scales=None):
+        windows = [
+            # blockWindows, sliceWindows, windowLocations, hogVisualizations:
+            breakIntoWindows(
+                feature_image[:, :, i],
+                orient=self.orient,
+                pixels_per_cell=self.pixels_per_cell,
+                cells_per_block=self.cells_per_block,
+                scales=scales,
+            )
+            for i in range(3)
+        ]
+        tricolorHogWindows, colorWindows = [
+            np.stack([windows[channel][i] for channel in range(3)], axis=-1)
+            for i in range(2)
+        ]
+        windowLocations = windows[0][2]
+        return tricolorHogWindows, colorWindows, windowLocations
+        
+    def _extract_features(self, feature_image, hogChannels):
+        
         # Extract all the requested features.
         features = []
 
@@ -194,23 +274,17 @@ class FeatureExtractor:
             features.append(hist_features)
 
         if self.hog_feat:
-            hog_features, hogVis = self._hog(
-                feature_image,
-                vis=vis,
-            )
-            features.append(hog_features)
-        else:
-            hogVis = None
+            features.append(hogChannels)
 
-        return np.concatenate(features), hogVis
+        return np.concatenate([f.ravel() for f in features])
 
     def _hog(self, feature_image, vis=False):
         return multichannelHog(
             feature_image,
             self.hog_channel,
             self.orient,
-            self.pix_per_cell,
-            self.cell_per_block,
+            self.pixels_per_cell,
+            self.cells_per_block,
             vis=vis,
         )
 

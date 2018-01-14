@@ -189,37 +189,21 @@ class Detector:
             print('Best parameters:', self.clf.best_params_)
 
     def rawDetect(self, image):
-        windows = self.generateWindows(image)
-        bboxes = self.search_windows(
-            image, windows
-        )
-        return bboxes
+        # Get features and corresponding image windows.
+        windowFeatures, windowLocations = self.featurize(image, window=False)
 
-    def search_windows(self, img, windows):
-        #1) Create an empty list to receive positive detection windows
-        on_windows = []
+        # Scale extracted features to be fed to classifier.
+        test_features = self.scaler.transform(windowFeatures)
+        
+        # Predict using trained classifier.
+        predictions = self.clf.predict(test_features)
 
-        #2) Iterate over all windows in the list
-        for window in windows:
-
-            #3) Extract the test window from original image
-            test_img = cv2.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64, 64))
-
-            #4) Extract features for that window using single_img_features()
-            features = self.featurize(test_img).reshape((1, -1))
-
-            #5) Scale extracted features to be fed to classifier
-            test_features = self.scaler.transform(features)
-
-            #6) Predict using your classifier
-            prediction = self.clf.predict(test_features)
-
-            #7) If positive (prediction == 1) then save the window
-            if prediction:
-                on_windows.append(window)
-
-        #8) Return windows for positive detections
-        return on_windows
+        # Return positive detection windows.
+        return [
+            window 
+            for (pred, window) in zip(predictions, windowLocations)
+            if pred
+        ]
 
     def drawDetect(self, image, ax=None, cleanax=True):
         bboxes = self.rawDetect(image)
@@ -235,22 +219,3 @@ class Detector:
             ax.set_xticks([])
             ax.set_yticks([]);
         return ax
-
-    @cached
-    def generateWindows(self, image):
-        windows = []
-        for scale, (hi, lo), overlap in self.scales:
-            kw = dict(
-                xy_window=(scale, scale),
-                y_start_stop=(lo, hi),
-                xy_overlap=(overlap, overlap),
-            )
-            kw.update(self.slide_window_kwargs)
-            windows.extend(
-                vehicleDetection.search.slide_window(
-                    image,
-                    **kw
-                )
-            )
-        return windows
-
