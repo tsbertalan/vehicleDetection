@@ -108,7 +108,7 @@ class HeatVideo:
             self.heatSources.append(power)
             self.rawBboxes.append(rawBboxes)
 
-    def persist(self, Tthresh=8):
+    def persist(self, Tthresh=20):
         # Post-process the heat sources to get persistent bounding boxes.self.labels = []
         self.temperatures = cooling(self.heatSources, **self.coolingKwargs)[1:]
 
@@ -170,7 +170,7 @@ class HeatVideo:
         def genVidFrames():
             for frame, segments in zip(self.inputFrames, zip(*framesToConcatenate)):
                 rawBox, power, temperature, persistentBbox = segments
-                tstr = 'temp (Tmax=%.2g)' % temperature.max()
+                tstr = 'temp (Tmax=%.3g [K])' % temperature.max()
                 vf = np.vstack([
                     np.hstack([
                         wt(rawBox, 'raw detections'), 

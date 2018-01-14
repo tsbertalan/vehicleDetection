@@ -38,9 +38,19 @@ class Detector:
             kernel='rbf',
             # High C is prone to overfitting; low, under.
             # Low C makes for a smoother decision surface.
+            #
+            # Increasing C roughly decreases the number of support vectors,
+            # and speed of inference is rougly linear with this.
+            # See https://stats.stackexchange.com/questions/270187
+            #
             # C=15.199110829529332,
-            C=.1,
+            C=1,
             # C=[10**(-.91)],
+            # For radial basis functions, gamma is the inverse square 
+            # of the kernel bandwidth--
+            # the characteristic distance in feature space used for the
+            # the implict diffusion transformation used before classification.
+            #
             # High gamma means influence of neighbors is more local; low, global.
             # Low-gamma behaves more like a a linear SVC; high more complex.
             # gamma=6.5793322465756827e-05,

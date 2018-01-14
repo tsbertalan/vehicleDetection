@@ -42,7 +42,7 @@ def draw_labeled_bboxes(img, labels, **kw):
     return drawBboxes(img, bboxes, **kw)
 
 
-def writeText(img, text, pixelsPerColumn=13, roffset=30, rpix=80, cpix=10, copy=True, **kwargs):
+def writeText(img, text, pixelsPerColumn=13, roffset=28, rpix=80, cpix=10, copy=True, **kwargs):
     if copy:
         img = np.copy(img)
 
