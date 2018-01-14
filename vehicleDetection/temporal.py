@@ -53,6 +53,8 @@ def cooling(heatSources, heatTransferCoefficient=1, heatCapacity=6, dt=1, powerF
     """
     def decay(u0, power):
         """Euler time stepper/flow map"""
+        # dudt = power - u0.astype(bool).astype(int) * 3
+        # return u0 + dudt * dt
         dudt = (power * powerFactor - heatTransferCoefficient * u0 - coolingRate) / heatCapacity
         return u0 + dudt * dt
 
