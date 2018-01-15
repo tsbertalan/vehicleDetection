@@ -9,7 +9,7 @@ In this project, the goal was to write a software pipeline to detect vehicles in
 All non-notebook code is in the package `vehicleDetection`, in the eponymous folder. Three Jupyter notebooks are included:
 1. [Movie.ipynb](Movie.ipynb) shows the use of the code, and generates the movie files visible on YouTube and linked in the report.
 2. [FastHOG.ipynb](FastHOG.ipynb) spot-checks the validity of the pre-computed HOG features, by showing visually that the HOG features, image window, and image slice view all match.
-3. [per-car data splitter.ipynb](per-car data splitter.ipynb) demonstrates the possibility of generating a train/test split that is randomized not (incorrectly) at the image/sample level, but at the car level.
+3. [per-car data splitter.ipynb](per-car%20data%20splitter.ipynb) demonstrates the possibility of generating a train/test split that is randomized not (incorrectly) at the image/sample level, but at the car level.
 
 Introduction copied from the report:
 
