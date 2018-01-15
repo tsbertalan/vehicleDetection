@@ -167,7 +167,8 @@ class HeatVideo:
 
     def load(self, fpath='/home/tsbertalan/data/vehicleDetection/detections.h5'):
         import h5py
-        self.loadedFile = f = h5py.File(fpath, 'r')
+        if hasattr(self, '_loadedFile'): self._loadedFile.close()
+        self._loadedFile = f = h5py.File(fpath, 'r')
         # try:
         # heatSources = [hs for hs in f['power']]
         # self.heatSources = heatSources
@@ -244,3 +245,6 @@ class HeatVideo:
             outVidPath,
             total=len(self.inputFrames),
         )
+
+    def __del__(self):
+        if hasattr(self, '_loadedFile'): self._loadedFile.close()

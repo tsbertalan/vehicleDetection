@@ -133,13 +133,13 @@ While a simpler, more ad-hoc scheme might have also worked, the physical analogy
 ![A representative frame of output.](samplePredictions.png)
 *A representative frame of output.*
 
-Diagnostic video for the project input video are visible at https://youtu.be/8OE3bXGQkXk.
+Diagnostic video for the project input video are visible at [go.tomsb.net/projectVehicleDetections](http://go.tomsb.net/projectVehicleDetections)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/8OE3bXGQkXk?rel=0&loop=1&playlist=8OE3bXGQkXk&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/b0TOYFsq_I4?rel=0&loop=1&playlist=b0TOYFsq_I4&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-Additionally, results for the test video are at https://youtu.be/9ZGxnX5UF6I.
+Additionally, results for the test video are at [go.tomsb.net/testVehicleDetections](http://go.tomsb.net/testVehicleDetections).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9ZGxnX5UF6I?rel=0&loop=1&playlist=9ZGxnX5UF6I&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_-CgCRDidVI?rel=0&loop=1&playlist=_-CgCRDidVI&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 While a more aggressive temperature threshold might be possible on the project video, the existing temperature threshold produces many false positives on the test video, especially when the road surface transitions from asphalt to concrete. I believe this road surface transition triggers the previously mentioned sharp-horizontal line detection. As many of the cars in the training set were darkly painted on a relatively light background, the classifier latched on to this falling horizontal edge as a strong predictor for the car class. It's possible that using more varied data would help with this problem, or maybe changing the regularization, perhaps by increasing C to allow for more features to be selected.
 
