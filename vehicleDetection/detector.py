@@ -11,8 +11,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cross_validation import train_test_split
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-from scipy.ndimage.measurements import label
-
 import vehicleDetection
 
 def cached(method):
@@ -44,8 +42,8 @@ class Detector:
             # See https://stats.stackexchange.com/questions/270187
             #
             # C=15.199110829529332,
-            C=1,
             # C=[10**(-.91)],
+            C=1,
             # For radial basis functions, gamma is the inverse square 
             # of the kernel bandwidth--
             # the characteristic distance in feature space used for the
@@ -108,7 +106,20 @@ class Detector:
             **featurizeKwargs
         )
 
-    def fit(self, imageWindows, classes, splitFrac=.9):
+    def save(self, fpath='data/detector.npz', addLabel=True):
+        if addLabel and hasattr(self, 'ntrain'):
+            fpath = '%s-%d_train.npz' % (fpath[:-3], self.ntrain)
+            
+        print('Saving to', fpath, '...', end=' ')
+        np.savez(fpath, scaler=self.scaler, clf=self.clf)
+        print('done.')
+
+    def load(self, fpath='data/detector.npz'):
+        data = np.load(fpath)
+        self.scaler = data['scaler'].reshape((1,))[0]
+        self.clf = data['clf'].reshape((1,))[0]
+
+    def fit(self, imageWindows, classes, splitFrac=.9, **skw):
         features = np.vstack([
             self.featurize(image).reshape((1, -1))
             for image in imageWindows
@@ -173,6 +184,7 @@ class Detector:
         #     random_state=rand_state
         # )
 
+        self.ntrain = len(y_train)
         self.clf.fit(X_train, y_train)
         # Check the score of the SVC
         print(
@@ -187,6 +199,8 @@ class Detector:
         import sklearn.model_selection._search
         if isinstance(self.clf, sklearn.model_selection._search.BaseSearchCV):
             print('Best parameters:', self.clf.best_params_)
+
+        self.save(**skw)
 
     def rawDetect(self, image):
         # Get features and corresponding image windows.

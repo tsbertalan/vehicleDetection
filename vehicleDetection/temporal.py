@@ -21,7 +21,7 @@ def bboxes2power(imageShape, bboxes):
         power[box[0][1]:box[1][1], box[0][0]:box[1][0]] += 1
     return power
 
-def cooling(heatSources, heatTransferCoefficient=1, heatCapacity=6, dt=1, powerFactor=10, coolingRate=64, firstTemps=None):
+def cooling(heatSources, heatTransferCoefficient=1, heatCapacity=20, dt=1, powerFactor=20, coolingRate=10, firstTemps=None):
     """Model exponential heat decay with source injections.
 
     Model heat decay at each pixel using
@@ -62,7 +62,7 @@ def cooling(heatSources, heatTransferCoefficient=1, heatCapacity=6, dt=1, powerF
     if firstTemps is None:
         firstTemps = np.zeros_like(heatSources[0])
     u = [firstTemps]
-    for heat in heatSources:
+    for heat in tqdm.tqdm_notebook(heatSources, desc='cooling', unit='frame'):
         u.append(decay(u[-1], heat))
         u[-1][u[-1] < 0] = 0
 
@@ -85,7 +85,7 @@ class HeatVideo:
         self.thr = thr
         self.coolingKwargs = {}
 
-    def go(self, detector):
+    def go(self, detector, **skw):
 
         if hasattr(detector.clf, 'n_support_'):
             print('Number of support vectors for each class:', detector.clf.n_support_)
@@ -110,6 +110,8 @@ class HeatVideo:
             self.heatSources.append(power)
             self.rawBboxes.append(rawBboxes)
 
+        self.save(**skw)
+
     def persist(self, Tthresh=20):
         # Post-process the heat sources to get persistent bounding boxes.self.labels = []
         self.temperatures = cooling(self.heatSources, **self.coolingKwargs)[1:]
@@ -127,7 +129,52 @@ class HeatVideo:
             )
         ]
 
+    def save(self, fpath='/home/tsbertalan/data/vehicleDetection/detections.h5', addLabel=True, guard=None):
+        import h5py
+        if addLabel:
+            fpath = fpath[:-3] + '-' + self.baseLabel + '.h5'
+        print('Saving to %s ...' % fpath, end=' ')
+
+        f = h5py.File(fpath, 'w')
+        try:
+            # Save the heat sources (several gigabytes).
+            data = self.heatSources[:guard]
+            out = f.create_dataset(
+                'power',
+                (len(data), *data[0].shape),
+                dtype=data[0].dtype
+            )
+            for i, x in enumerate(tqdm.tqdm_notebook(data, desc='power images', unit='frame')):
+                out[i] = x
+
+            # Save the raw bounding boxes (several kilobytes).
+            data = self.rawBboxes[:guard]
+            dt = h5py.special_dtype(vlen=np.array(data[0]).dtype)
+            out = f.create_dataset('rawBboxes', (len(data),), dtype=dt)
+            for i, x in enumerate(data):
+                x = np.array(x).ravel()
+                out[i] = x
+        except:
+            pass
+        f.close()
+        
+        print('done.')
+
+    def load(self, fpath='/home/tsbertalan/data/vehicleDetection/detections.h5'):
+        import h5py
+        self.loadedFile = f = h5py.File(fpath, 'r')
+        # try:
+        # heatSources = [hs for hs in f['power']]
+        # self.heatSources = heatSources
+        self.heatSources = f['power']
+        bboxes = [[tuple(map(tuple, b)) for b in bb.reshape((-1, 2, 2))] for bb in f['rawBboxes']]
+        self.rawBboxes = bboxes
+        #     f.close()
+        # except:
+        #     f.close()
+            
     def video(self, label=None, outVidPath=None):
+        print('Generating video.')
 
         # Assemble output path.
         if outVidPath is None:
@@ -138,49 +185,48 @@ class HeatVideo:
             ext = outVidPath[-4:]
             outVidPath.replace(ext, label + ext)
 
-        def rescaleField(mats):
-            m = np.stack(mats)            
-            m -= m.min()
-            m = m / float(m.max())
-            m *= 255.
-            return m.astype('uint8')
-
-        framesToConcatenate = [
-            #self.inputFrames,
-            [
-                vehicleDetection.drawing.drawBboxes(frame, bbox, color=(255, 0, 0))
-                for (frame, bbox) in zip(self.inputFrames, self.rawBboxes)
-            ],
-            rescaleField(self.heatSources),
-            rescaleField(self.temperatures),
-            [
-                vehicleDetection.drawing.drawBboxes(frame, bbox, color=(255, 0, 255))
-                for (frame, bbox) in zip(self.inputFrames, self.persistentBboxes)
-            ]
-        ]
-
-        from vehicleDetection.drawing import writeText as wt
-        import cv2
-        def f(weights, label, frame, alpha=.8, hot=True):
-            cmap = cv2.applyColorMap(
-                weights, 
-                cv2.COLORMAP_HOT if hot else cv2.COLORMAP_OCEAN
-            )
-            cmap = cv2.cvtColor(cmap, cv2.COLOR_BGR2RGB)
-            return wt(cv2.addWeighted(cmap, alpha, frame, .8, 0), label)
+        highPower = max([x.max() for x in tqdm.tqdm_notebook(self.heatSources, desc='hmax?')])
+        highTemp = max([x.max() for x in self.temperatures])
 
         def genVidFrames():
-            for frame, segments in zip(self.inputFrames, zip(*framesToConcatenate)):
-                rawBox, power, temperature, persistentBbox = segments
+            print('Generating %d video frames.' % len(self.inputFrames))
+            """Assemble the video frames in a generator to conserve memory."""
+            from vehicleDetection.drawing import writeText as tlabel
+            import cv2
+
+            for i in range(len(self.inputFrames)):
+                frame = self.inputFrames[i]
+
+                def overlay(weights, alpha=.8, hot=True):
+                    """Overlay weights on current frame."""
+                    cmap = cv2.applyColorMap(
+                        weights, 
+                        cv2.COLORMAP_HOT if hot else cv2.COLORMAP_OCEAN
+                    )
+                    cmap = cv2.cvtColor(cmap, cv2.COLOR_BGR2RGB)
+                    return cv2.addWeighted(cmap, alpha, frame, .8, 0)
+
+                rawBox = vehicleDetection.drawing.drawBboxes(
+                    frame, 
+                    self.rawBboxes[i],
+                    color=(255, 0, 0)
+                )
+                power = (self.heatSources[i] / highPower * 255).astype('uint8')
+                temperature = (self.temperatures[i] / highTemp * 255).astype('uint8')
+                persistentBbox = vehicleDetection.drawing.drawBboxes(
+                    frame,
+                    self.persistentBboxes[i],
+                    color=(255, 0, 255)
+                )
                 tstr = 'temp (Tmax=%.3g [K])' % temperature.max()
                 vf = np.vstack([
                     np.hstack([
-                        wt(rawBox, 'raw detections'), 
-                        f(power, 'heating power', frame, hot=False)
+                        tlabel(rawBox, 'raw detections'), 
+                        tlabel(overlay(power, hot=False), 'heating power')
                         ]),
                     np.hstack([
-                        f(temperature, tstr, frame), 
-                        wt(persistentBbox, 'persistent thresholded components')
+                        tlabel(overlay(temperature), tstr), 
+                        tlabel(persistentBbox, 'persistent thresholded components')
                     ]),
                 ])
                 self.vidFrame = vf
@@ -188,5 +234,6 @@ class HeatVideo:
 
         return saveVideo(
             genVidFrames(),
-            outVidPath
+            outVidPath,
+            total=len(self.inputFrames),
         )
