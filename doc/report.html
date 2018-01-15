@@ -1,0 +1,1208 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  max-width: 980px;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 45px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><style>/*github*/
+.codehilite {background-color:#fff;color:#333333;}
+.codehilite .hll {background-color:#ffffcc;}
+.codehilite .c{color:#999988;font-style:italic}
+.codehilite .err{color:#a61717;background-color:#e3d2d2}
+.codehilite .k{font-weight:bold}
+.codehilite .o{font-weight:bold}
+.codehilite .cm{color:#999988;font-style:italic}
+.codehilite .cp{color:#999999;font-weight:bold}
+.codehilite .c1{color:#999988;font-style:italic}
+.codehilite .cs{color:#999999;font-weight:bold;font-style:italic}
+.codehilite .gd{color:#000000;background-color:#ffdddd}
+.codehilite .ge{font-style:italic}
+.codehilite .gr{color:#aa0000}
+.codehilite .gh{color:#999999}
+.codehilite .gi{color:#000000;background-color:#ddffdd}
+.codehilite .go{color:#888888}
+.codehilite .gp{color:#555555}
+.codehilite .gs{font-weight:bold}
+.codehilite .gu{color:#800080;font-weight:bold}
+.codehilite .gt{color:#aa0000}
+.codehilite .kc{font-weight:bold}
+.codehilite .kd{font-weight:bold}
+.codehilite .kn{font-weight:bold}
+.codehilite .kp{font-weight:bold}
+.codehilite .kr{font-weight:bold}
+.codehilite .kt{color:#445588;font-weight:bold}
+.codehilite .m{color:#009999}
+.codehilite .s{color:#dd1144}
+.codehilite .n{color:#333333}
+.codehilite .na{color:teal}
+.codehilite .nb{color:#0086b3}
+.codehilite .nc{color:#445588;font-weight:bold}
+.codehilite .no{color:teal}
+.codehilite .ni{color:purple}
+.codehilite .ne{color:#990000;font-weight:bold}
+.codehilite .nf{color:#990000;font-weight:bold}
+.codehilite .nn{color:#555555}
+.codehilite .nt{color:navy}
+.codehilite .nv{color:teal}
+.codehilite .ow{font-weight:bold}
+.codehilite .w{color:#bbbbbb}
+.codehilite .mf{color:#009999}
+.codehilite .mh{color:#009999}
+.codehilite .mi{color:#009999}
+.codehilite .mo{color:#009999}
+.codehilite .sb{color:#dd1144}
+.codehilite .sc{color:#dd1144}
+.codehilite .sd{color:#dd1144}
+.codehilite .s2{color:#dd1144}
+.codehilite .se{color:#dd1144}
+.codehilite .sh{color:#dd1144}
+.codehilite .si{color:#dd1144}
+.codehilite .sx{color:#dd1144}
+.codehilite .sr{color:#009926}
+.codehilite .s1{color:#dd1144}
+.codehilite .ss{color:#990073}
+.codehilite .bp{color:#999999}
+.codehilite .vc{color:teal}
+.codehilite .vg{color:teal}
+.codehilite .vi{color:teal}
+.codehilite .il{color:#009999}
+.codehilite .gc{color:#999;background-color:#EAF2F5}
+</style><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX"],
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    processEscapes: false
+  },
+  TeX: {
+    extensions: ["AMSmath.js", "AMSsymbols.js"],
+    TagSide: "right",
+    TagIndent: ".8em",
+    MultLineWidth: "85%",
+    equationNumbers: {
+      autoNumber: "AMS",
+    },
+    unicode: {
+      fonts: "STIXGeneral,'Arial Unicode MS'"
+    }
+  },
+  showProcessingMessages: false
+});
+</script>
+<title>report</title></head><body><article class="markdown-body"><h1 id="vehicle-detection"><a name="user-content-vehicle-detection" href="#vehicle-detection" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Vehicle Detection</h1>
+<p>The goal of this project was to use classical computer vision methods (that is, not deep convolutional neural networks (CNN)) to detect and draw bounding boxes around vehicles which show up in footage from a hood-mounted camera. This can be reduced to a supervised classification task, in which image patches are classified as either &ldquo;car&rdquo; or &ldquo;not-car&rdquo;. While, in a CNN approach, this scale/translation slewing (a covolution!) can be handled efficiently, with a network that directly outputs bounding boxes, or a detection heatmap, here, we make do with explicit windows.</p>
+<p>Eliding some details, the classifier pipeline takes as input image patch, transforms from RGB to a more meaningful color space, computes higher-order features including color histograms and locally-binned histograms of oriented gradients (HOG), and then passes these to a radial basis function support vector classifier (RBF-SVC). Each detection window is added to a heat map over the entire image.</p>
+<p>In order to encourage the surfacing of only persistent detections, this heat map is used in a simulated cooling process to produce a temperature map which evolves over multiple frames of video. The temperature map is thresholded to produce several disjoint regions, bounding boxes on which are taken to be the final detection bounding boxes.</p>
+<h2 id="training-data"><a name="user-content-training-data" href="#training-data" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Training data</h2>
+<p><em>Data is loaded by <code>vehicleDetection.data.getData</code>.</em></p>
+<p>While multiple sources of data were available, for simplicity I used only the GTI Vehicle Image Database<sup id="fnref:gti"><a class="footnote-ref" href="#fn:gti" rel="footnote">1</a></sup>, from the Technical University of Madrid. This is a collection of 64x64 color images of cars, vans, trucks, etc. seen on the roads of Madrid, Brussels, and Turin.</p>
+<p><img alt="some GTI positive examples" src="VehicleDatabase.png" /><br />
+<em>(Image taken from <a href="http://www.gti.ssr.upm.es/data/Vehicle_database.html"><a href="http://www.gti.ssr.ump.es"><a href="http://www.gti.ssr.ump.es">www.gti.ssr.ump.es</a></a></a>.)</em></p>
+<p>Both positive (shown above) and negative examples are included, and positive examples are further divided into far, left, middle-close, and right categories, which might be an interesting expansion on the basic car/no-car categorization done here. The basic dataset provided includes 3,900 negative examples and 2,826 positive examples.</p>
+<h3 id="traintest-split-for-gti-data"><a name="user-content-traintest-split-for-gti-data" href="#traintest-split-for-gti-data" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Train/test split for GTI data</h3>
+<p><em>The experiments described in this subsection are in <code>per-car data splitter.ipynb</code>.</em></p>
+<p>Because GTI images are extracted from larger 360x256 video frames, the exhibit some seqentiality. Often, runs of up to a dozen images that are clearly of the same car occur in sequence in the data.<br />
+<img alt="sequential GTI images" src="sortedGTICarImages.png" /><br />
+Here, numbers after the colon are the file names of the images, minus the prefix &ldquo;image&rdquo; and postfix &ldquo;.png&rdquo;. Transitions in these supplied indices are indicated in red while it&rsquo;s apparent that some vehicle transitions are noted this way, by no means are all.</p>
+<p>The presense of runs of the same car is significant for assessing training progress&ndash;when creating a train/test split of the data, a naively random split will include portions of most runs in both parts of the split. Since many images are very similar to others within their run, this will result in a testing dataset that is insufficiently different from the training set to provide a realistic idea of generalizability of results.</p>
+<p>My first method for alleviating this problem, though unused, did provide some useful insight, and so I&rsquo;ll discuss it here. My goal was to detect these transitions, so that I could randomly assign whole runs to the train or test set. Using the color-histogram image featurization discussed below, I calculated the Euclidean feature distance between subsequent images. Simply thresholding these values was insufficient for separating same-car transitions from different-car, as visible by the evident difficulty of fitting a high-quality logistic regression to the feature distance data.<br />
+<img alt="can't do logistic regression here" src="logisticRegressionHard.png" /></p>
+<p>Instead, I considerd searching for local peaks in this signal, defined as distances which were a factor of 1.5 larger than the median of their radius-3 neighborhood to right and left.</p>
+<p><img alt="searching for car transitions" src="carTransitions.png" /><br />
+Here, &ldquo;true&rdquo; transitions were found for the first 200 or so images by manual inspection, marked by black vertical lines. Red dashed lines correspond to jumps in the indexing implied by the image file names, while magenta lines are local peaks of the signal. This method likely would have performed well enough to produce an adequate train/test split, or even many such splits, suitable for automated k-fold cross validation when performing a grid search for parameter values (see below).</p>
+<p>However, rather taking the time to write the data generator necessary to make full use of these splits for cross validation, for the purposes of once-off classifier validation, I instead simply used the first ~90% of the image from each class as training data, and the last ~10% as testing.</p>
+<h2 id="featurization"><a name="user-content-featurization" href="#featurization" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Featurization</h2>
+<p><em>Featurization is performed by <code>vehicleDetection.features.FeatureExtractor</code>.</em></p>
+<p>The first step in featurization of the image patches here was transformation to a more meaningful color space. While the default red-green-blue encoding of ingested images is sufficient for storage, the red, green, and blue channels for individual pixels are highly correlated, inhibiting parsimony in any classifier that uses these features. One way to see this is in the similarity of the mean red, green, and blue channels.<br />
+<img alt="mean RGB channels" src="meanCarImage.png" /></p>
+<p>Instead, I used the hue-lightness-saturation colorspace, in which different information is more readily available in the three channels. While extensive variation in the H and S channels makes the mean images uninterpretable, they are distinct from the mean L image.<br />
+<img alt="mean HLS channels" src="car.png" /></p>
+<p>Viewed on an individual image, however, the H and S channels  clearly pick out the taillights of a car, while the L channel shows the horizontal shape of its trunk and bumper.<br />
+<img alt="HLS on one image" src="sampleChannels.png" /></p>
+<p>In addition to the raw HLS pixel values, I used histogram of oriented gradient (HOG) features on each of the HLS channels. This method divides the image into cells a few pixels wide (usually 8x8 for my purposes), then allows each pixel to vote for one of a small number of orientations (here, usually 9). These votes are weighted by the strength of the gradient at that pixel, to produce a histogram of gradient directions within that cell. After a normalization involving several neighboring cells, these histograms are concatenated into a contribution towards the feature vector.</p>
+<p>Visualized in the aggregate, the average HLS image shows a strong horizontal edge at the top of the L channel on positive-class images. At the moment, my classifiers all seem to rely heavily on this feature, perhaps to the exclusion of light-colored cars (whose upper edge gradient might be reversed in direction).<br />
+<img alt="mean HLS HOG" src="car%20HOG.png" /></p>
+<p>Finally, I used scikit-learn&rsquo;s <code>StandardScalar</code> to scale features before use with my classifier, as the support vector machine is sensitive to the scale of the individual features.</p>
+<h3 id="data-augmentation"><a name="user-content-data-augmentation" href="#data-augmentation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Data augmentation.</h3>
+<p><em>Data augmentation is performed in the second half of <code>vehicleDetection.data.getData</code>.</em></p>
+<p>Since the GTI data seems to be generally lower-resolution and darker European images, compared the gloriously sunny high-resolution southern California video of the test videos, I was initially quite concerned that the simple distribution of pixel values would be quite different between the train/test and inference data. Below I show these distributions in HSV space, which is similar to the distribution in HSL.</p>
+<p><img alt="training pixel distribution" src="distTrain.png" /><br />
+<em>Distribution of training pixels.</em></p>
+<p><img alt="training pixel distribution" src="distTest.png" /><br />
+<em>Distribution of inference pixels.</em></p>
+<p>I was particularly concerned about the large gap in the 40-80 range of the H channel. However, upon examining the color that these values corespond to in the 180-double-degree encoding used by OpenCV, I was able to hand wave this as a preponderance of negative-class foilage images in the training data.</p>
+<p>However, I was still concerned that the inference video frames seemed subjectively lighter than the training images, so I implemented a data agumentation scheme, whereby I converted some subset of the training images to HSV space, increased the V channel a random amount such than no pixel&rsquo;s V channel was allowed to go over 255, then converted back to RGB.</p>
+<p>Additionally, I did some simple left-right flip augmentation.</p>
+<p>It&rsquo;s not clear to me that this augmentation necessarily improved the classification results, but it certainly did make training slower.</p>
+<h3 id="hog-reuse-and-sliding-windows"><a name="user-content-hog-reuse-and-sliding-windows" href="#hog-reuse-and-sliding-windows" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>HOG reuse and sliding windows</h3>
+<p><em>HOG resuse is computed in <code>vehicleDetection.features.breakIntoWindows</code>.</em></p>
+<p>While HOG features were generated from scratch each time for training images, in order to save time and memory during inference, I developed a method to generate HOG features across the whole image only once, reusing this for all translated and scaled image windows. While this slightly tightened the coupling of the code, in combination of vectorization of the inference operation, this produced a 10x speedup at test time.</p>
+<p>When called with <code>feature_vector=False, orient=9, pixels_per_cell=8</code>, and <code>cells_per_block=2</code>, the featurizer of <code>skimage.feature.hog</code> returns a <code>feature_array</code> of shape <code>(nx, ny, 2, 2, 9)</code>, where the <code>nx</code> and <code>ny</code> components represent the number of times the <code>cells_per_block</code> by <code>cells_per_block</code> normalization block can be translated across the image in steps of once cell.</p>
+<p>To pregenerate my HOG features, I first took horizontal-slice regions-of-interest from my input frames, then expressed my goal image-patch radius for each slice (e.g. 128), as well as fractional overlap between patches (e.g. 0.5). I scaled the slices up or down such that the desired patch sizes were mapped to the 64x64 size of my training patches, and applied <code>skimage.feature.hog</code>. </p>
+<p>I then found indexes into the first two dimensions of <code>feature_array</code> such that 64x64 patches of the desired fractional overlap were approximately achieved, considering the stride pattern of the normalization blocks. Unrestricted use of the parameters for <code>skimage.feature.hog</code> will prevent the number and size (when mapped back to video pixel space) of the windows generated this way from being exactly as requested. However, they will map consistently to patches of the same number of HOG features, meaning our classifier (trained on 64x64 patches) will still work. As a final step, I computed the resulting indexes into the original image, and also returned windowed views of that image for computing raw-pixel (or color histogram) features.</p>
+<p>As a special case, a goal of a 64x64 (unscaled) window, applied to a full-height &ldquo;slice&rdquo; of a 64x64 input image produces only a single window and the HOG features thereof. This allowed me to use the same code at train and test time.</p>
+<p>All featurization code is contained in a single <code>FeatureExtractor</code> class, whose <code>__call__</code> method dispatches between the 64x64 single-window special-case and the large-frame, many-window inference case; returning feature vector or array of feature vectors, accompanied by window boundaries, as appropriate.</p>
+<h2 id="classification"><a name="user-content-classification" href="#classification" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Classification</h2>
+<p><em>Classification is performed by <code>vehicleDetection.detector.Detector</code>.</em></p>
+<p>Though perhaps it was a premature decision, I quickly settled on a RBF-SVC as my classification method, as this seemed to provide equal-quality results to a linear-kernel SVC or a decision tree on my initial tests, with better speed than the second and surprisingly similar speed to the first.</p>
+<p>I used <code>sklearn</code>&lsquo;s built-in cross-validated grid search to find values for the $C$ and $\gamma$ parameters of the RBF-SVC. A more careful approach would include the choice among the three classifiers in this grid search (which might need to become a random hyperparameter search, or a more sophisticated Bayesian hyperparameter search, as the dimension of the hyperparameter space grows). Additionally, due to the sequential nature of the data discussed above, the validation errors used for this search should be taken with a massive grain of salt. Really, the method described in the &ldquo;train/test split for GTI data&rdquo; section above should be used for generating the train-test splits needed for the k-fold cross-validation strategy used by <code>sklearn</code>.</p>
+<p>Regardless, this search <em>did</em> enable met to find a workable region of the $C\times\gamma$ space in which the classifier wouldn&rsquo;t completely collapse to predicting all one class or the other.</p>
+<p><img alt="RBF-SVC hyperparameter search" src="hyperparameterSearch.png" /></p>
+<p>With in all the <code>sklearn</code> SVC kernels (linear, RBF, and polynomial), the $C$ parameter represents the penalty on misclassifications (or, more accurately, violations of the margin constraint). Using a high value will results in a more convoluted classification surface with a smaller margin. This smaller margin usually results in fewer support vectors<sup id="fnref:so"><a class="footnote-ref" href="#fn:so" rel="footnote">2</a></sup>, which can help with runtime (which appears to be mainly linear in the number of support vectors). However, increasing C too far will result in overfitting.</p>
+<p>For the RBF kernel, the $\gamma=1/\epsilon^2$ parameter is equal to the inverse square of the bandwidth parameter $\epsilon$ in the Gaussian kernel $exp(-||x_1 - x_2||^2 / \epsilon^2)$. As such, it can be thought of as the typical length scale in the feature space at which we discern structures. This way of thinking of $\gamma$ is connected the similar use of the kernel trick in diffusion maps<sup id="fnref:dmaps"><a class="footnote-ref" href="#fn:dmaps" rel="footnote">3</a></sup>, where the kernel expansion form of the feature vectors which is only implicitly present for support vector machines is in fact computed explicitly.</p>
+<p>In diffusion maps, we consider performing a random walk on the feature-space representation of the data, where probability of transitions is governed by closeness in feature space, where the nonliear stretching of the Gaussian kernel pushes large distances to infinity in comparison to distances on the order of $\epsilon$. The eigenvectors of the diffusion operator on this data geometry&ndash;the archetypical directions of the heat diffusion represented by this random walk&ndash;then constitute a lower-dimensional, hopefully more meaningful representation of the data. With the SVC, these diffusion coordinates are not computed explictly, but a linear classifier is implicitly formed in the (infinite-dimensional) full diffusion-coordinate space.</p>
+<p>As such, using a small value of $\gamma$ (and therefore a large value for $\epsilon$) is like taking a birds-eye view of the data manifold, which ignores fine distinctions betwen feature vectors. As such, it should tend to underfit the data, while a large value of $\gamma$ will produce a classifier which is preoccupied with fine distinctions in the data&ndash;in the limit as $\gamma$ increases, the classifier should be unable to generalize at all, believing that the ideal interpretation of the data is that each and every feature vector should be considered a perfectly unique class all to itself. This prediction arises from the analogy to spectral clustering<sup id="fnref:specClust"><a class="footnote-ref" href="#fn:specClust" rel="footnote">4</a></sup>, which is an interpretation of these spectral methods for the unsupervised task of predicting (without known classes) the number and memberships of classes implied by the data.</p>
+<h2 id="reducing-outliers-and-tracking-persistent-detections"><a name="user-content-reducing-outliers-and-tracking-persistent-detections" href="#reducing-outliers-and-tracking-persistent-detections" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Reducing outliers and tracking persistent detections</h2>
+<p><em>Detection persistence is determined by <code>vehicleDetection.temporal.HeatVideo</code>, and the temperature image effect is computed in <code>vehicleDetection.temporal.cooling</code>.</em></p>
+<p>When applied to an frame sequence from video, the pipeline described above produced many false positive window detections that may only last for a single frame, but generally produced multiple detections at different scales on and around true cars. To emphasize these persistent true-positive detections, I extended the &ldquo;heatmap&rdquo; analogy for the output from the detector with an application of Newton&rsquo;s law of cooling with a heat source.</p>
+<p>Specifically, I summed the detection windows for the video frame at timestep $t$ to produce a &ldquo;heating power&rdquo; image $h(t)$, to which I assigned units of detections. I initialized a temperature image $u(t)$ (units of Kelvins) as all zeros at the start of the video. I then computed the warming rate of this image as<br />
+$$\dot u = \frac{\gamma A (0 - u(t)) + \phi h(t)}{\beta},$$<br />
+where $\gamma = 1 [\frac{W}{m^2 K}]$ is the heat transfer coefficient, $A=1 [m^2]$ is the imagined surface area of each pixel, $\phi = 20 [W/\mathrm{detection}]$ is the heating power of one detection, and $\beta = 20 [J/K]$ is the heat capacity of a pixel.</p>
+<p>I then &ldquo;simulated&rdquo; this ODE by taking one Euler timestep for each frame, with an assumed duration of 1 second per frame. Negative temperatures (an artifact of this coarse timestepping) were clipped to zero after each Euler step.</p>
+<p>While a simpler, more ad-hoc scheme might have also worked, the physical analogy was appealing to me.</p>
+<h2 id="results"><a name="user-content-results" href="#results" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Results</h2>
+<p><em>Videos are generated by <code>vehicleDetection.temporal.HeatVideo.video</code>.</em></p>
+<p><img alt="A representative frame of output." src="samplePredictions.png" /><br />
+<em>A representative frame of output.</em></p>
+<p>Diagnostic video for the project input video are visible at <a href="https://youtu.be/8OE3bXGQkXk">https://youtu.be/8OE3bXGQkXk</a>.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8OE3bXGQkXk?rel=0&loop=1&playlist=8OE3bXGQkXk&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<p>Additionally, results for the test video are at <a href="https://youtu.be/9ZGxnX5UF6I">https://youtu.be/9ZGxnX5UF6I</a>.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9ZGxnX5UF6I?rel=0&loop=1&playlist=9ZGxnX5UF6I&modestbranding=1&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<p>While a more aggressive temperature threshold might be possible on the project video, the existing temperature threshold produces many false positives on the test video, especially when the road surface transitions from asphalt to concrete. I believe this road surface transition triggers the previously mentioned sharp-horizontal line detection. As many of the cars in the training set were darkly painted on a relatively light background, the classifier latched on to this falling horizontal edge as a strong predictor for the car class. It&rsquo;s possible that using more varied data would help with this problem, or maybe changing the regularization, perhaps by increasing C to allow for more features to be selected.</p>
+<h2 id="conclusion-and-future-work"><a name="user-content-conclusion-and-future-work" href="#conclusion-and-future-work" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Conclusion and future work</h2>
+<p>My classifier produced many false positives. It would probably help a lot if I did more tweaking on my feature generation, and perhaps also on my classifier. Early on, I experimented with using not the predictions from the classifier, but the value of the classifiers decision function as the additive value for generating my heating-power map. While it seemed at the time that the decision function values did not correlate well with what I expected the confidence of the predictions to be, this approach might still be useful by setting a threshold other than 0 for this decision function.</p>
+<p>In order to control runtime, I attempted to use C to control the number of support vectors used. One possible alternative would be to consider <code>sklearn.svm.NuSVC</code>, which uses an extra parameter specifically to control the number of support vectors. However, <code>NuSVC</code> lacks the $C$ parameter, so it&rsquo;s unclear to me how my intuition about how $C$ affects performance can be transferred to the $\nu$ parameter of the <code>NuSVC</code>.</p>
+<h2 id="references"><a name="user-content-references" href="#references" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>References</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:gti">
+<p><a href="http://www.gti.ssr.upm.es/data/Vehicle_database.html"><em>GTI Vehicle Database</em></a>&#160;<a class="footnote-backref" href="#fnref:gti" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:so">
+<p><a href="https://stats.stackexchange.com/questions/270187"><em>SVM: Why does the number of support vectors decrease when C is increased?</em></a>&#160;<a class="footnote-backref" href="#fnref:so" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dmaps">
+<p><a href="http://doi.org/10.1016/j.acha.2006.04.006">Coifman, R. R., &amp; Lafon, S. (2006). <em>Diffusion maps.</em> Applied and Computational Harmonic Analysis, 21(1), 5–30.</a>&#160;<a class="footnote-backref" href="#fnref:dmaps" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:specClust">
+<p><a href="http://doi.org/10.1007/s11222-007-9033-z">Luxburg, U. (2007). <em>A tutorial on spectral clustering.</em> Statistics and Computing, 17(4), 395–416.</a>&#160;<a class="footnote-backref" href="#fnref:specClust" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div></article></body></html>
