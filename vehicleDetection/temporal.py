@@ -84,6 +84,7 @@ class HeatVideo:
         self.inputFrames = loadVideo(fpath=self.fpath, **loadKwargs)
         self.thr = thr
         self.coolingKwargs = {}
+        self.detectorLabel = None
 
     def go(self, detector, **skw):
 
@@ -110,6 +111,7 @@ class HeatVideo:
             self.heatSources.append(power)
             self.rawBboxes.append(rawBboxes)
 
+        self.detectorLabel = detector.label
         self.save(**skw)
 
     def persist(self, Tthresh=20):
@@ -132,7 +134,10 @@ class HeatVideo:
     def save(self, fpath='/home/tsbertalan/data/vehicleDetection/detections.h5', addLabel=True, guard=None):
         import h5py
         if addLabel:
-            fpath = fpath[:-3] + '-' + self.baseLabel + '.h5'
+            fpath = fpath[:-3] + '-' + self.baseLabel
+            if self.detectorLabel is not None:
+                fpath += '-' + self.detectorLabel
+            fpath += '.h5'
         print('Saving to %s ...' % fpath, end=' ')
 
         f = h5py.File(fpath, 'w')
@@ -174,16 +179,18 @@ class HeatVideo:
         #     f.close()
             
     def video(self, label=None, outVidPath=None):
-        print('Generating video.')
-
         # Assemble output path.
         if outVidPath is None:
             outVidPath = 'doc/%s-detected.mp4' % (
                 self.baseLabel,
             )
-        if label is not None:
+        l = '' if label is None else label
+        if self.detectorLabel is not None:
+            l += '-' + self.detectorLabel
+        if len(l) > 0:
             ext = outVidPath[-4:]
-            outVidPath.replace(ext, label + ext)
+            outVidPath = outVidPath.replace(ext, l + ext)
+        print('Generating video %s.' % outVidPath)
 
         highPower = max([x.max() for x in tqdm.tqdm_notebook(self.heatSources, desc='hmax?')])
         highTemp = max([x.max() for x in self.temperatures])

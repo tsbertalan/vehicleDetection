@@ -105,11 +105,23 @@ class Detector:
         self.featurize = vehicleDetection.features.FeatureExtractor(
             **featurizeKwargs
         )
+        self.label = None
+
+    @property
+    def label(self):
+        if self._label is None:
+            if hasattr(self, 'ntrain'):
+                self._label = '%d_train' % self.ntrain
+        return self._label
+
+    @label.setter
+    def label(self, _label):
+        self._label = _label
 
     def save(self, fpath='data/detector.npz', addLabel=True):
-        if addLabel and hasattr(self, 'ntrain'):
-            fpath = '%s-%d_train.npz' % (fpath[:-3], self.ntrain)
-            
+        if addLabel and self.label is not None:
+            fpath = '%s-%s.npz' % (fpath[:-3], self.label)
+
         print('Saving to', fpath, '...', end=' ')
         np.savez(fpath, scaler=self.scaler, clf=self.clf)
         print('done.')
